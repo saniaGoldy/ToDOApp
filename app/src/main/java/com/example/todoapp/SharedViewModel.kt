@@ -10,10 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.example.todoapp.database.AppDatabase
 import com.example.todoapp.entities.ToDoItemEntity
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -23,8 +20,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         "todoitementity"
     ).build()
 
-    private val _toDoItemEntities =
-        MutableLiveData(mutableListOf(ToDoItemEntity(0, "Some content")))
+    private var _toDoItemEntities =
+        MutableLiveData<MutableList<ToDoItemEntity>>(mutableListOf(ToDoItemEntity(0,"some content")))
 
     val toDoItemEntities: LiveData<MutableList<ToDoItemEntity>>
         get() = _toDoItemEntities
@@ -35,7 +32,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val isYellowThemeSelected: LiveData<Boolean> get() = _isYellowThemeSelected
 
     fun switchColorPrefs() {
-        _isYellowThemeSelected.value = !isYellowThemeSelected.value!!
+        _isYellowThemeSelected.value = !_isYellowThemeSelected.value!!
         Log.d("MyApp", "switchColorPrefs: ${isYellowThemeSelected.value}")
 
         getApplication<Application>().getSharedPreferences(
@@ -49,10 +46,16 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     }
 
-    fun saveData(): Job {
-        return viewModelScope.launch {
-            _toDoItemEntities.value?.let { database.toDoDao().insertAll(it) }
+    private fun saveEntry(toDoItemEntity: ToDoItemEntity): Job {
+        return GlobalScope.launch {
+            database.toDoDao().insertAll(toDoItemEntity)
         }
+    }
+
+    fun addAListEntry(content: String) {
+        val newEntity = ToDoItemEntity(_toDoItemEntities.value!!.size, content)
+        _toDoItemEntities.value?.add(newEntity)
+        saveEntry(newEntity)
     }
 
     private fun updateIsYellowThemeItemSelected(): Boolean {
@@ -62,6 +65,10 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         ).getBoolean(
             IS_YELLOW_THEME_SELECTED_PREF_NAME, false
         )
+    }
+
+    fun fetchData(): LiveData<MutableList<ToDoItemEntity>> {
+        return database.toDoDao().getAll()
     }
 
     companion object {

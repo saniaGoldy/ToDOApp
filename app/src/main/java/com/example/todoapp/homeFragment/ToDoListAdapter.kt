@@ -59,6 +59,8 @@ class ToDoListAdapter(private var itemsData: MutableList<ToDoItemEntity>, privat
 
                 if(isAlternativeThemeSelected){
                     setTextColor(resources.getColor(R.color.yellow, null))
+                }else{
+                    setTextColor(resources.getColor(R.color.white, null))
                 }
             }
 

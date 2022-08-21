@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.todoapp.SharedViewModel
 import com.example.todoapp.databinding.FragmentHomeBinding
+import com.example.todoapp.entities.ToDoItemEntity
 
 class HomeFragment : Fragment() {
 
@@ -39,6 +40,10 @@ class HomeFragment : Fragment() {
         viewModel.toDoItemEntities.observe(
             this
         ) { adapter.update(it) }
+
+        viewModel.fetchData().observe(this){
+            adapter.update(it)
+        }
         super.onResume()
     }
 
