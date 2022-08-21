@@ -52,6 +52,19 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     }
 
+    fun deleteMissingEntries(toDoItemList: List<ToDoItemEntity>) {
+        with(GlobalScope) {
+            toDoItemList.forEach {toDoItem ->
+                if (!toDoItemList.contains(toDoItem))
+                    launch { database.toDoDao().delete(toDoItem) }
+            }
+        }
+    }
+
+    fun deleteEntry(toDoItemEntity: ToDoItemEntity){
+        GlobalScope.launch { database.toDoDao().delete(toDoItemEntity) }
+    }
+
     private fun saveEntry(toDoItemEntity: ToDoItemEntity): Job {
         return GlobalScope.launch {
             database.toDoDao().insertAll(toDoItemEntity)

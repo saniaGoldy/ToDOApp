@@ -12,13 +12,13 @@ import com.example.todoapp.SharedViewModel
 import com.example.todoapp.databinding.FragmentHomeBinding
 import com.example.todoapp.entities.ToDoItemEntity
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), ToDoListAdapter.ButtonActionCallback {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: SharedViewModel by activityViewModels()
-    private val adapter = ToDoListAdapter(mutableListOf())
+    private val adapter = ToDoListAdapter(mutableListOf(), handler = this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,5 +47,9 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun deleteItem(toDoItemEntity: ToDoItemEntity) {
+        viewModel.deleteEntry(toDoItemEntity)
     }
 }

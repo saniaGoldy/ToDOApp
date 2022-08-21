@@ -5,10 +5,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.entities.ToDoItemEntity
 import com.example.todoapp.databinding.TodoListItemBinding
+import com.example.todoapp.entities.ToDoItemEntity
 
-class ToDoListAdapter(private var itemsData: MutableList<ToDoItemEntity>, private var isAlternativeThemeSelected: Boolean = false) :
+class ToDoListAdapter(
+    private var itemsData: MutableList<ToDoItemEntity>,
+    private var isAlternativeThemeSelected: Boolean = false,
+    val handler: ButtonActionCallback
+) :
     RecyclerView.Adapter<ToDoListAdapter.ViewHolder>() {
 
 
@@ -26,15 +30,22 @@ class ToDoListAdapter(private var itemsData: MutableList<ToDoItemEntity>, privat
         notifyDataSetChanged()
     }
 
-    fun updateTextColor(altThemeSelected: Boolean){
+    fun updateTextColor(altThemeSelected: Boolean) {
         isAlternativeThemeSelected = altThemeSelected
         Log.d("MyApp", "updateTextColor:$altThemeSelected")
         update(itemsData)
     }
 
+    fun getItems() = itemsData
+
     private fun deleteItem(position: Int) {
-        itemsData.removeAt(position)
-        this.notifyItemRemoved(position)
+        val itemToDelete = itemsData[position]
+        //itemsData.removeAt(position)
+        handler.deleteItem(itemToDelete)
+    }
+
+    interface ButtonActionCallback {
+        fun deleteItem(toDoItemEntity: ToDoItemEntity)
     }
 
     inner class ViewHolder(private val binding: TodoListItemBinding) :
