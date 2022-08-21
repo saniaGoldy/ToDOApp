@@ -37,13 +37,10 @@ class HomeFragment : Fragment() {
             adapter.updateTextColor(it)
         }
 
-        viewModel.toDoItemEntities.observe(
+        viewModel.toDoItemsList.observe(
             this
         ) { adapter.update(it) }
 
-        viewModel.fetchData().observe(this){
-            adapter.update(it)
-        }
         super.onResume()
     }
 

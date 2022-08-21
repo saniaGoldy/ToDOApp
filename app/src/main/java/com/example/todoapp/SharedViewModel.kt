@@ -3,10 +3,7 @@ package com.example.todoapp
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.room.Room
 import com.example.todoapp.database.AppDatabase
 import com.example.todoapp.entities.ToDoItemEntity
@@ -21,15 +18,24 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     ).build()
 
     private var _toDoItemEntities =
-        MutableLiveData<MutableList<ToDoItemEntity>>(mutableListOf(ToDoItemEntity(0,"some content")))
+        MutableLiveData<MutableList<ToDoItemEntity>>(mutableListOf())
 
-    val toDoItemEntities: LiveData<MutableList<ToDoItemEntity>>
+    private val toDoItemEntities: LiveData<MutableList<ToDoItemEntity>>
         get() = _toDoItemEntities
 
     private val _isYellowThemeSelected: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(updateIsYellowThemeItemSelected())
 
     val isYellowThemeSelected: LiveData<Boolean> get() = _isYellowThemeSelected
+
+    private fun fetchData(): LiveData<MutableList<ToDoItemEntity>> {
+        return database.toDoDao().getAll()
+    }
+
+    val toDoItemsList = MediatorLiveData<MutableList<ToDoItemEntity>>().apply {
+        addSource(toDoItemEntities){value = it}
+        addSource(fetchData()){value = it}
+    }
 
     fun switchColorPrefs() {
         _isYellowThemeSelected.value = !_isYellowThemeSelected.value!!
@@ -55,6 +61,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     fun addAListEntry(content: String) {
         val newEntity = ToDoItemEntity(_toDoItemEntities.value!!.size, content)
         _toDoItemEntities.value?.add(newEntity)
+        Log.d(TAG, "addAListEntry: $newEntity")
         saveEntry(newEntity)
     }
 
@@ -65,10 +72,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         ).getBoolean(
             IS_YELLOW_THEME_SELECTED_PREF_NAME, false
         )
-    }
-
-    fun fetchData(): LiveData<MutableList<ToDoItemEntity>> {
-        return database.toDoDao().getAll()
     }
 
     companion object {
