@@ -36,11 +36,8 @@ class ToDoListAdapter(
         update(itemsData)
     }
 
-    fun getItems() = itemsData
-
     private fun deleteItem(position: Int) {
         val itemToDelete = itemsData[position]
-        //itemsData.removeAt(position)
         handler.deleteItem(itemToDelete)
     }
 

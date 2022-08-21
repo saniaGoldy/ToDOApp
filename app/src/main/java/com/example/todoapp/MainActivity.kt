@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,8 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        binding.addItemFloatingButton.setOnClickListener { view ->
-            showAlertDialog(view)
+        binding.addItemFloatingButton.setOnClickListener {
+            showAlertDialog()
         }
 
         sharedViewModel.isYellowThemeSelected.observe(this) { yellowThemeSelected ->
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAlertDialog(view: View) {
+    private fun showAlertDialog() {
         val alertView = layoutInflater.inflate(
             R.layout.fragment_add_to_do_task,
             null
@@ -76,14 +75,5 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun reload() {
-        val intent = intent
-        overridePendingTransition(0, 0)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-        finish()
-        overridePendingTransition(0, 0)
-        startActivity(intent)
     }
 }
