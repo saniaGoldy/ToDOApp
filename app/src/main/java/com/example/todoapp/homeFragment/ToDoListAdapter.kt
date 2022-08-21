@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.ToDoItemData
+import com.example.todoapp.entities.ToDoItemEntity
 import com.example.todoapp.databinding.TodoListItemBinding
 
-class ToDoListAdapter(private var itemsData: MutableList<ToDoItemData>, private var isAlternativeThemeSelected: Boolean = false) :
+class ToDoListAdapter(private var itemsData: MutableList<ToDoItemEntity>, private var isAlternativeThemeSelected: Boolean = false) :
     RecyclerView.Adapter<ToDoListAdapter.ViewHolder>() {
 
 
@@ -21,7 +21,7 @@ class ToDoListAdapter(private var itemsData: MutableList<ToDoItemData>, private 
 
     override fun getItemCount(): Int = itemsData.size
 
-    fun update(itemsData: MutableList<ToDoItemData>) {
+    fun update(itemsData: MutableList<ToDoItemEntity>) {
         this.itemsData = itemsData
         notifyDataSetChanged()
     }
@@ -41,7 +41,7 @@ class ToDoListAdapter(private var itemsData: MutableList<ToDoItemData>, private 
         RecyclerView.ViewHolder(binding.root) {
         private val itemContent = binding.toDoItemContent
 
-        fun bind(item: ToDoItemData, position: Int) {
+        fun bind(item: ToDoItemEntity, position: Int) {
             with(itemContent) {
                 text = item.content
                 isChecked = item.isChecked

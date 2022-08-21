@@ -1,7 +1,6 @@
 package com.example.todoapp.homeFragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ class HomeFragment : Fragment() {
 
         binding.toDoList.adapter = adapter
         viewModel.isYellowThemeSelected.observe(viewLifecycleOwner, adapter::updateTextColor)
-        viewModel.toDoItemData.observe(viewLifecycleOwner, adapter::update)
+        viewModel.toDoItemEntities.observe(viewLifecycleOwner, adapter::update)
 
         return binding.root
     }

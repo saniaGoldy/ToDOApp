@@ -6,14 +6,28 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.example.todoapp.database.AppDatabase
+import com.example.todoapp.entities.ToDoItemEntity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val database = Room.databaseBuilder(
+        application.applicationContext,
+        AppDatabase::class.java,
+        "todoitementity"
+    ).build()
 
-    private val _toDoItemData = MutableLiveData(mutableListOf(ToDoItemData("Some content")))
+    private val _toDoItemEntities =
+        MutableLiveData(mutableListOf(ToDoItemEntity(0, "Some content")))
 
-    val toDoItemData: LiveData<MutableList<ToDoItemData>>
-        get() = _toDoItemData
+    val toDoItemEntities: LiveData<MutableList<ToDoItemEntity>>
+        get() = _toDoItemEntities
 
     private val _isYellowThemeSelected: MutableLiveData<Boolean> =
         MutableLiveData<Boolean>(updateIsYellowThemeItemSelected())
@@ -33,6 +47,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         )
             .apply()
 
+    }
+
+    fun saveData(): Job {
+        return viewModelScope.launch {
+            _toDoItemEntities.value?.let { database.toDoDao().insertAll(it) }
+        }
     }
 
     private fun updateIsYellowThemeItemSelected(): Boolean {

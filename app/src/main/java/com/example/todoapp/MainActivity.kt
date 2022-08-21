@@ -2,6 +2,7 @@ package com.example.todoapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -26,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.addItemFloatingButton.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Saving...", Snackbar.LENGTH_SHORT)
                 .setAnchorView(R.id.addItemFloatingButton)
-                .setAction("Action", null).show()
+                .setAction("Action") { Log.d("MyApp", "dbAcsess") }.show()
         }
 
         sharedViewModel.isYellowThemeSelected.observe(this) { yellowThemeSelected ->
