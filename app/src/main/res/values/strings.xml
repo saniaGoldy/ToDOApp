@@ -47,4 +47,7 @@
     <string name="delete">delete</string>
     <string name="addbutton">addButton</string>
     <string name="swich_colors">Swich Colors</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">apply</string>
+    <string name="todo_content">ToDo Content</string>
 </resources>
