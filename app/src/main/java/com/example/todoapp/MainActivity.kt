@@ -1,19 +1,16 @@
 package com.example.todoapp
 
+import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.navigation.ui.AppBarConfiguration
 import com.example.todoapp.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,9 +47,19 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_switch_colors -> {
                 sharedViewModel.switchColorPrefs()
+                reload()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun reload() {
+        val intent = intent
+        overridePendingTransition(0, 0)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        finish()
+        overridePendingTransition(0, 0)
+        startActivity(intent)
     }
 }
