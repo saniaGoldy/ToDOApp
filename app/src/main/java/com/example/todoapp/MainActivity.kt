@@ -1,15 +1,17 @@
 package com.example.todoapp
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.example.todoapp.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,12 +29,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         binding.addItemFloatingButton.setOnClickListener { view ->
-            Snackbar.make(view, "Saving...", Snackbar.LENGTH_SHORT)
-                .setAnchorView(R.id.addItemFloatingButton)
-                .setAction("Action") { Log.d("MyApp", "dbAcsess") }.show()
+            showAlertDialog(view)
         }
 
         sharedViewModel.isYellowThemeSelected.observe(this) { yellowThemeSelected ->
+            Log.d("MyApp", "MainActivity.ColourObserver: $yellowThemeSelected")
             binding.toolbar.setTitleTextColor(
                 if (yellowThemeSelected) {
                     getColor(R.color.yellow)
@@ -41,6 +42,21 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    private fun showAlertDialog(view: View) {
+        val alertView = layoutInflater.inflate(
+            R.layout.fragment_add_to_do_task,
+            null
+        )
+
+        AlertDialog.Builder(this)
+            .setTitle("Create new ToDo Task")
+            .setView(alertView)
+            .setCancelable(true)
+            .setPositiveButton(getString(R.string.apply)) { _, _ ->
+                sharedViewModel.addAListEntry(alertView.findViewById<EditText>(R.id.editText).text.toString())
+            }.create().show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -56,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_switch_colors -> {
                 sharedViewModel.switchColorPrefs()
-                reload()
                 true
             }
             else -> super.onOptionsItemSelected(item)
