@@ -7,14 +7,12 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.navigation.ui.AppBarConfiguration
 import com.example.todoapp.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private val sharedViewModel:SharedViewModel by viewModels()
 
@@ -31,6 +29,16 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAnchorView(R.id.addItemFloatingButton)
                 .setAction("Action", null).show()
+        }
+
+        sharedViewModel.isYellowThemeSelected.observe(this) { yellowThemeSelected ->
+            binding.toolbar.setTitleTextColor(
+                if (yellowThemeSelected) {
+                    getColor(R.color.yellow)
+                } else {
+                    getColor(R.color.white)
+                }
+            )
         }
     }
 
