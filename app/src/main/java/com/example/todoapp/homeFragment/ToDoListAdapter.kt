@@ -58,16 +58,16 @@ class ToDoListAdapter(
                     if (isChecked) {
                         isChecked = !isChecked
                         setCheckMarkDrawable(R.drawable.ic_baseline_radio_button_unchecked_24)
-                    }else{
+                    } else {
                         isChecked = !isChecked
                         setCheckMarkDrawable(R.drawable.ic_baseline_check_24)
                     }
 
                 }
 
-                if(isAlternativeThemeSelected){
+                if (isAlternativeThemeSelected) {
                     setTextColor(resources.getColor(R.color.yellow, null))
-                }else{
+                } else {
                     setTextColor(resources.getColor(R.color.white, null))
                 }
             }

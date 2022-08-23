@@ -3,11 +3,17 @@ package com.example.todoapp
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.example.todoapp.database.AppDatabase
 import com.example.todoapp.entities.ToDoItemEntity
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
@@ -34,8 +40,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     val toDoItemsList = MediatorLiveData<MutableList<ToDoItemEntity>>().apply {
-        addSource(freshToDoItems){value = it}
-        addSource(fetchData()){value = it}
+        addSource(freshToDoItems) { value = it }
+        addSource(fetchData()) { value = it }
     }
 
 
@@ -63,7 +69,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         )
     }
 
-    fun deleteEntry(toDoItemEntity: ToDoItemEntity){
+    fun deleteEntry(toDoItemEntity: ToDoItemEntity) {
         GlobalScope.launch { database.toDoDao().delete(toDoItemEntity) }
     }
 

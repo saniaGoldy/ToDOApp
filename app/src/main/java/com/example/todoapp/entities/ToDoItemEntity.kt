@@ -9,6 +9,6 @@ data class ToDoItemEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
 
-    @ColumnInfo(name = "content")var content: String,
-    @ColumnInfo(name = "isChecked")var isChecked: Boolean = false
+    @ColumnInfo(name = "content") var content: String,
+    @ColumnInfo(name = "isChecked") var isChecked: Boolean = false
 )
