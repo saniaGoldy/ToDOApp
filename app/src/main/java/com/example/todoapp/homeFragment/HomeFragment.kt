@@ -49,7 +49,5 @@ class HomeFragment : Fragment(), ToDoListAdapter.ButtonActionCallback {
         _binding = null
     }
 
-    override fun deleteItem(toDoItemEntity: ToDoItemEntity) {
-        viewModel.deleteEntry(toDoItemEntity)
-    }
+    override fun deleteItem(toDoItemEntity: ToDoItemEntity) = viewModel.deleteEntry(toDoItemEntity)
 }
